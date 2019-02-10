@@ -23,7 +23,9 @@
  */
 package com.github.skapral.wemake.data;
 
+import com.pragmaticobjects.oo.memoized.core.Memory;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
 
 /**
  * 
@@ -32,14 +34,35 @@ import org.apache.http.client.methods.HttpGet;
 public class JsonGithubUserRepositories extends HttpJsonArray implements JsonArray {
     /**
      * Ctor
-     * @param json 
+     * @param memory memory
+     * @param json json
      */
-    public JsonGithubUserRepositories(Json json) {
+    public JsonGithubUserRepositories(Memory memory, Json json) {
         super(
-            () -> new HttpGet(
-                json.json().getString("repos_url")
-            )
+            memory,
+            new HttpCall(json)
         );
     }
     
+    /**
+     * 
+     */
+    private static class HttpCall implements com.github.skapral.wemake.data.HttpCall {
+        private final Json json;
+
+        /**
+         * 
+         * @param json 
+         */
+        public HttpCall(Json json) {
+            this.json = json;
+        }
+        
+        @Override
+        public final HttpRequestBase httpCall() {
+            return new HttpGet(
+                json.json().getString("repos_url")
+            );
+        }
+    }
 }

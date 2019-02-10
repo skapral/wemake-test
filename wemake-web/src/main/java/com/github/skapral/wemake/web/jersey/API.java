@@ -46,7 +46,8 @@ public class API extends ResourceConfig {
             AuthenticationFilter.class,
             AuthenticationEndpoint.class,
             JsonBody.class,
-            JsonArrayBody.class
+            JsonArrayBody.class,
+            MemoryFeature.class
         );
     }
 }

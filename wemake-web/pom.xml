@@ -36,5 +36,9 @@
             <groupId>com.pragmaticobjects.oo.data</groupId>
             <artifactId>data-alltogether</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.pragmaticobjects.oo.memoized</groupId>
+            <artifactId>memoized-chm</artifactId>
+        </dependency>
     </dependencies>
 </project>

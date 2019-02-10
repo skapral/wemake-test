@@ -31,9 +31,10 @@ import com.github.skapral.wemake.data.UserAvatarFromJson;
 import com.github.skapral.wemake.data.UserNameFromJson;
 import com.github.skapral.wemake.web.usr.UserAuthenticated;
 import com.github.skapral.wemake.data.Json;
-import com.github.skapral.wemake.data.JsonArray;
 import com.github.skapral.wemake.data.UserInfoComposite;
 import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import com.pragmaticobjects.oo.memoized.core.Memory;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -49,24 +50,38 @@ import javax.ws.rs.core.Context;
 @Path("/user")
 @Produces("application/json")
 public class UserEndpoint {
+    @Inject private Memory memory;
+    
     /**
      * @param request Request
-     * @return index.html
+     * @return user info in json format
      */
     @GET
     public Json getUserInfo(@Context HttpServletRequest request) {
-        final Json githubUser = new JsonGithubUser(
-            new UserAuthenticated(
-                request
-            )
-        );
-        final JsonArray githubUserRepos = new JsonGithubUserRepositories(githubUser);
         return new JsonWemakeUserInfo(
             new UserInfoComposite(
-                new UserNameFromJson(githubUser),
-                new UserAvatarFromJson(githubUser)
+                new UserNameFromJson(
+                    new JsonGithubUser(
+                        memory,
+                        new UserAuthenticated(request)
+                    )
+                ),
+                new UserAvatarFromJson(
+                    new JsonGithubUser(
+                        memory,
+                        new UserAuthenticated(request)
+                    )
+                )
             ),
-            new MultipleRepos(githubUserRepos)
+            new MultipleRepos(
+                new JsonGithubUserRepositories(
+                    memory,
+                    new JsonGithubUser(
+                        memory,
+                        new UserAuthenticated(request)
+                    )
+                )
+            )
         );
     }
 }

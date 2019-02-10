@@ -21,48 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.data;
+package com.github.skapral.wemake.web.jersey;
 
-import com.github.skapral.wemake.web.usr.User;
+import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import com.pragmaticobjects.oo.memoized.chm.MemoryCHM;
 import com.pragmaticobjects.oo.memoized.core.Memory;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.inject.Inject;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.FeatureContext;
+import javax.ws.rs.ext.Provider;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 
 /**
  *
  * @author skapral
  */
-public class JsonGithubUser extends HttpJsonObject implements JsonGithubApiResponse {
+@NotAtom
+@Provider
+public class MemoryFeature implements Feature {
+    @Inject private ServiceLocator locator;
+    
     /**
-     * Ctor.
-     * @param memory memory
-     * @param user user
+     * 
+     * @param context
+     * @return 
      */
-    public JsonGithubUser(Memory memory, User user) {
-        super(
-            memory,
-            new HttpCall(user)
-        );
+    @Override
+    public boolean configure(FeatureContext context) {
+        System.out.println("configure");
+        org.glassfish.hk2.utilities.ServiceLocatorUtilities.bind(locator, new MemoryBinder());
+        return true;
     }
     
     /**
      * 
      */
-    private static class HttpCall implements com.github.skapral.wemake.data.HttpCall {
-        private final User user;
-
+    @NotAtom
+    public static class MemoryBinder extends AbstractBinder {
         /**
          * 
-         * @param user 
          */
-        public HttpCall(User user) {
-            this.user = user;
-        }
-
         @Override
-        public final HttpRequestBase httpCall() {
-            return new HttpGet(
-                "https://api.github.com/users/" + user.userLogin()
+        protected void configure() {
+            bind(RequestScopedMemoryCHM.class).to(Memory.class);
+        }
+    }
+    
+    /**
+     * 
+     */
+    private static class RequestScopedMemoryCHM extends MemoryCHM {
+        /**
+         * 
+         */
+        public RequestScopedMemoryCHM() {
+            super(
+                new ConcurrentHashMap<>()
             );
         }
     }

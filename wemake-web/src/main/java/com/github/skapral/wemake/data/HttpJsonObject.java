@@ -23,6 +23,7 @@
  */
 package com.github.skapral.wemake.data;
 
+import com.pragmaticobjects.oo.memoized.core.Memory;
 import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,25 +38,35 @@ import org.json.JSONObject;
  */
 public class HttpJsonObject implements Json {
     private final static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
+    private final Memory memory;
     private final HttpCall call;
 
     /**
      * Ctor.
+     * @param memory Memory
      * @param call Http call
      */
-    public HttpJsonObject(HttpCall call) {
+    public HttpJsonObject(Memory memory, HttpCall call) {
+        this.memory = memory;
         this.call = call;
     }
 
     @Override
     public final JSONObject json() {
-        try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall()
-        )) {
-            return new JSONObject(
-                IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())
-            );
-        } catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
+        return memory.memoizedCalculation(
+            this,
+            HttpJsonObject::json,
+            () -> {
+                System.out.println("request");
+                try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall()
+                )) {
+                    return new JSONObject(
+                        IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())
+                    );
+                } catch(Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        ).calculate();
     }
 }
