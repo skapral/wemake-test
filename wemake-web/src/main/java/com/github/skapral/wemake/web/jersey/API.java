@@ -44,7 +44,9 @@ public class API extends ResourceConfig {
             UserEndpoint.class,
             DefaultExceptionMapper.class,
             AuthenticationFilter.class,
-            AuthenticationEndpoint.class
+            AuthenticationEndpoint.class,
+            JsonBody.class,
+            JsonArrayBody.class
         );
     }
 }

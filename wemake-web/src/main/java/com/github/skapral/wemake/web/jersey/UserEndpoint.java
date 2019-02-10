@@ -54,7 +54,7 @@ public class UserEndpoint {
      * @return index.html
      */
     @GET
-    public String getUserInfo(@Context HttpServletRequest request) {
+    public Json getUserInfo(@Context HttpServletRequest request) {
         final Json githubUser = new JsonGithubUser(
             new UserAuthenticated(
                 request
@@ -67,6 +67,6 @@ public class UserEndpoint {
                 new UserAvatarFromJson(githubUser)
             ),
             new MultipleRepos(githubUserRepos)
-        ).json().toString();
+        );
     }
 }

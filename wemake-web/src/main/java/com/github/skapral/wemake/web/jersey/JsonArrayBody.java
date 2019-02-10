@@ -21,33 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.app;
+package com.github.skapral.wemake.web.jersey;
 
-import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
+import com.github.skapral.wemake.data.JsonArray;
 import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.nio.charset.Charset;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.Provider;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Application bootstrap class.
- * 
+ *
  * @author skapral
  */
 @NotAtom
-public class Bootstrap {
-    /**
-     * Entry point
-     * 
-     * @param args 
-     * @throws Exception if something goes wrong
-     */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new CpStatic("8080"),
-            new API()
-        ).start();
-        while(true) {
-            System.in.read();
-        }
+@Provider
+@Produces("application/json")
+public class JsonArrayBody implements MessageBodyWriter<JsonArray> {
+
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return JsonArray.class.isAssignableFrom(type);
     }
+
+    @Override
+    public void writeTo(JsonArray t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
+        IOUtils.write(t.jsonArray().toString(), entityStream, Charset.defaultCharset());
+    }
+    
 }
