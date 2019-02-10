@@ -9,14 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wemake-rest</artifactId>
+    <artifactId>wemake-web</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.skapral.wemake</groupId>
-            <artifactId>wemake-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.github.skapral.config</groupId>
             <artifactId>config-properties</artifactId>
@@ -36,6 +31,10 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.pragmaticobjects.oo.data</groupId>
+            <artifactId>data-alltogether</artifactId>
         </dependency>
     </dependencies>
 </project>

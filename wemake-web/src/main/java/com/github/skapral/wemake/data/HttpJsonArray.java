@@ -21,39 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.json;
+package com.github.skapral.wemake.data;
 
 import java.nio.charset.Charset;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.json.JSONObject;
-import static com.github.skapral.wemake.json.$.*;
+import org.json.JSONArray;
 
 /**
- * Json, obtained by HTTP call
- * 
+ *
  * @author skapral
  */
-public class HttpJsonObject implements $<JSONObject> {
+public class HttpJsonArray implements JsonArray {
     private final static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
-    private final $<HttpRequestBase> call;
+    private final HttpCall call;
 
     /**
      * Ctor.
      * @param call Http call
      */
-    public HttpJsonObject($<HttpRequestBase> call) {
+    public HttpJsonArray(HttpCall call) {
         this.call = call;
     }
 
     @Override
-    public final JSONObject $() {
-        try (CloseableHttpResponse response = HTTP_CLIENT.execute($$(call)
-        )) {
-            return new JSONObject(
+    public final JSONArray jsonArray() {
+        try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall())) {
+            return new JSONArray(
                 IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())
             );
         } catch(Exception ex) {

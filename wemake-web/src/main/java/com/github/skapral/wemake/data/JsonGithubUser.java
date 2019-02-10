@@ -21,4 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake;
+package com.github.skapral.wemake.data;
+
+import com.github.skapral.wemake.web.usr.User;
+import org.apache.http.client.methods.HttpGet;
+
+/**
+ *
+ * @author skapral
+ */
+public class JsonGithubUser extends HttpJsonObject implements JsonGithubApiResponse {
+    /**
+     * Ctor.
+     * @param user 
+     */
+    public JsonGithubUser(User user) {
+        super(
+            () -> new HttpGet(
+                "https://api.github.com/users/" + user.userLogin()
+            )
+        );
+    }
+}

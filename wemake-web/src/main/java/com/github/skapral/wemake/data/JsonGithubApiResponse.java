@@ -21,32 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.app;
-
-import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
-import com.pragmaticobjects.oo.atom.anno.NotAtom;
+package com.github.skapral.wemake.data;
 
 /**
- * Application bootstrap class.
- * 
+ *
  * @author skapral
  */
-@NotAtom
-public class Bootstrap {
-    /**
-     * Entry point
-     * 
-     * @param args 
-     */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new CpStatic("8080"),
-            new API()
-        ).start();
-        while(true) {
-            System.in.read();
-        }
-    }
+public interface JsonGithubApiResponse extends Json {
 }

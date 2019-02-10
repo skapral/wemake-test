@@ -21,39 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake;
+@Scalar(value = "Json", type = JSONObject.class)
+@Scalar(value = "JsonArray", type = JSONArray.class)
+@Scalar(value = "HttpCall", type = HttpRequestBase.class)
+@Scalar(value = "UserName", type = String.class)
+@Scalar(value = "UserAvatar", type = URI.class)
+@Scalar(value = "RepoName", type = String.class)
+@Scalar(value = "RepoDescription", type = String.class)
+@Structure(value = "UserInfo", has = {"UserName", "UserAvatar"})
+@Structure(value = "Repo", has = {"RepoName", "RepoDescription"})
+package com.github.skapral.wemake.data;
 
-import com.github.skapral.config.CpEnvironment;
-import com.github.skapral.config.CpOneOf;
-import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
-import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import com.pragmaticobjects.oo.data.anno.Scalar;
+import com.pragmaticobjects.oo.data.anno.Structure;
+import java.net.URI;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-/**
- * Bootstrap
- * 
- * @author skapral
- */
-@NotAtom
-public class Bootstrap {
-    /**
-     * Entry point
-     * @param args arguments
-     * @throws Exception if something went wrong
-     */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new CpOneOf(
-                new CpEnvironment("PORT"),
-                new CpStatic("8080")
-            ),
-            new API(),
-            "/api",
-            "/"
-        ).start();
-        while(true) {
-            System.in.read();
-        }
-    }
-}

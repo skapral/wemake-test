@@ -21,41 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.json;
-
-import java.nio.charset.Charset;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.json.JSONArray;
-import static com.github.skapral.wemake.json.$.*;
+package com.github.skapral.wemake.data;
 
 /**
  *
  * @author skapral
  */
-public class HttpJsonArray implements $<JSONArray> {
-    private final static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
-    private final $<HttpRequestBase> call;
-
-    /**
-     * Ctor.
-     * @param call Http call
-     */
-    public HttpJsonArray($<HttpRequestBase> call) {
-        this.call = call;
-    }
-
-    @Override
-    public final JSONArray $() {
-        try (CloseableHttpResponse response = HTTP_CLIENT.execute($$(call))) {
-            return new JSONArray(
-                IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())
-            );
-        } catch(Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+public interface JsonWemakeApiResponse extends Json {
 }

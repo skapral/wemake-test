@@ -21,32 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.app;
+package com.github.skapral.wemake.data;
 
-import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
-import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
- * Application bootstrap class.
- * 
+ *
  * @author skapral
  */
-@NotAtom
-public class Bootstrap {
+public class JsonWemakeUserInfo implements Json {
+    private final UserInfo userInfo;
+    private final Multiple<Repo> userRepos;
+
     /**
-     * Entry point
+     * Ctor.
      * 
-     * @param args 
+     * @param userInfo User info
+     * @param userRepos User repositories
      */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new CpStatic("8080"),
-            new API()
-        ).start();
-        while(true) {
-            System.in.read();
+    public JsonWemakeUserInfo(UserInfo userInfo, Multiple<Repo> userRepos) {
+        this.userInfo = userInfo;
+        this.userRepos = userRepos;
+    }
+
+    @Override
+    public final JSONObject json() {
+        JSONObject result = new JSONObject();
+        result.put("name", userInfo.userName());
+        result.put("avatar_url", userInfo.userAvatar().toString());
+        JSONArray repos = new JSONArray();
+        for(Repo repo : userRepos.items()) {
+            JSONObject repoJson = new JSONObject();
+            repoJson.put("name", repo.repoName());
+            repoJson.put("description", repo.repoDescription());
+            repos.put(repoJson);
         }
+        result.put("repos", repos);
+        return result;
     }
 }

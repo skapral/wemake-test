@@ -21,32 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.app;
+package com.github.skapral.wemake.data;
 
-import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
-import com.pragmaticobjects.oo.atom.anno.NotAtom;
+import java.nio.charset.Charset;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.json.JSONObject;
 
 /**
- * Application bootstrap class.
+ * Json, obtained by HTTP call
  * 
  * @author skapral
  */
-@NotAtom
-public class Bootstrap {
+public class HttpJsonObject implements Json {
+    private final static CloseableHttpClient HTTP_CLIENT = HttpClients.createDefault();
+    private final HttpCall call;
+
     /**
-     * Entry point
-     * 
-     * @param args 
+     * Ctor.
+     * @param call Http call
      */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new CpStatic("8080"),
-            new API()
-        ).start();
-        while(true) {
-            System.in.read();
+    public HttpJsonObject(HttpCall call) {
+        this.call = call;
+    }
+
+    @Override
+    public final JSONObject json() {
+        try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall()
+        )) {
+            return new JSONObject(
+                IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())
+            );
+        } catch(Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

@@ -23,8 +23,16 @@
  */
 package com.github.skapral.wemake.web.jersey;
 
-import com.github.skapral.wemake.json.JsonGithubUserInfo;
+import com.github.skapral.wemake.data.JsonGithubUser;
+import com.github.skapral.wemake.data.JsonGithubUserRepositories;
+import com.github.skapral.wemake.data.JsonWemakeUserInfo;
+import com.github.skapral.wemake.data.MultipleRepos;
+import com.github.skapral.wemake.data.UserAvatarFromJson;
+import com.github.skapral.wemake.data.UserNameFromJson;
 import com.github.skapral.wemake.web.usr.UserAuthenticated;
+import com.github.skapral.wemake.data.Json;
+import com.github.skapral.wemake.data.JsonArray;
+import com.github.skapral.wemake.data.UserInfoComposite;
 import com.pragmaticobjects.oo.atom.anno.NotAtom;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -47,10 +55,18 @@ public class UserEndpoint {
      */
     @GET
     public String getUserInfo(@Context HttpServletRequest request) {
-        return new JsonGithubUserInfo(
+        final Json githubUser = new JsonGithubUser(
             new UserAuthenticated(
                 request
             )
-        ).$().toString();
+        );
+        final JsonArray githubUserRepos = new JsonGithubUserRepositories(githubUser);
+        return new JsonWemakeUserInfo(
+            new UserInfoComposite(
+                new UserNameFromJson(githubUser),
+                new UserAvatarFromJson(githubUser)
+            ),
+            new MultipleRepos(githubUserRepos)
+        ).json().toString();
     }
 }

@@ -21,4 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.json;
+package com.github.skapral.wemake.data;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+import org.json.JSONObject;
+
+/**
+ *
+ * @author skapral
+ */
+public class MultipleRepos implements Multiple<Repo> {
+    private final JsonArray reposJson;
+
+    /**
+     * Ctor.
+     * @param reposJson Repositories
+     */
+    public MultipleRepos(JsonArray reposJson) {
+        this.reposJson = reposJson;
+    }
+
+    @Override
+    public final Collection<Repo> items() {
+        return StreamSupport.stream(reposJson.jsonArray().spliterator(), false)
+                .map(o -> (JSONObject) o)
+                .map(JsonValue::new)
+                .map(jv -> (Repo) new RepoComposite(
+                        new RepoNameFromJson(jv),
+                        new RepoDescriptionFromJson(jv)
+                ))
+                .collect(Collectors.toList());
+    }
+}

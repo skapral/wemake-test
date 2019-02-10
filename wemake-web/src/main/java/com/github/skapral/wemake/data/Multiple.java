@@ -21,39 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.skapral.wemake.json;
+package com.github.skapral.wemake.data;
+
+import java.util.Collection;
 
 /**
- * Pocket Dependency Inversion
+ * Multiple items.
  * 
  * @author skapral
- * @param <T> type
+ * @param <T> items type
  */
-public @FunctionalInterface interface $<T> {
+public interface Multiple<T> {
     /**
-     * @return dependency
+     * @return collection with all items
      */
-    T $();
-    
-    /**
-     * Resolve inverted dependency
-     * 
-     * @param <T> Dependency type
-     * @param t Dependency inversion
-     * @return dependency
-     */
-    static <T> T $$($<T> t) {
-        return t.$();
-    }
-    
-    /**
-     * Invert dependency
-     * 
-     * @param <T> Dependency type
-     * @param t Dependency inversion
-     * @return dependency
-     */
-    static <T> $<T> $$(T t) {
-        return () -> t;
-    }
+    Collection<T> items();
 }
