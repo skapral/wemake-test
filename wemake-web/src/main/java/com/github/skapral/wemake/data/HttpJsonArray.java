@@ -55,7 +55,6 @@ public class HttpJsonArray implements JsonArray {
         return memory.memoizedCalculation(
             this, HttpJsonArray::jsonArray,
             () -> {
-                System.out.println("request");
                 try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall())) {
                     return new JSONArray(
                         IOUtils.toString(response.getEntity().getContent(), Charset.defaultCharset())

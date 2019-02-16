@@ -26,9 +26,11 @@
 @Scalar(value = "HttpCall", type = HttpRequestBase.class)
 @Scalar(value = "UserName", type = String.class)
 @Scalar(value = "UserAvatar", type = URI.class)
+@Scalar(value = "UserLocation", type = URI.class)
 @Scalar(value = "RepoName", type = String.class)
 @Scalar(value = "RepoDescription", type = String.class)
 @Structure(value = "UserInfo", has = {"UserName", "UserAvatar"})
+@Structure(value = "UserFullInfo", has = {"UserName", "UserAvatar", "UserLocation"})
 @Structure(value = "Repo", has = {"RepoName", "RepoDescription"})
 package com.github.skapral.wemake.data;
 

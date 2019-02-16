@@ -57,7 +57,6 @@ public class HttpJsonObject implements Json {
             this,
             HttpJsonObject::json,
             () -> {
-                System.out.println("request");
                 try (CloseableHttpResponse response = HTTP_CLIENT.execute(call.httpCall()
                 )) {
                     return new JSONObject(

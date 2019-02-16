@@ -50,7 +50,6 @@ public class MemoryFeature implements Feature {
      */
     @Override
     public boolean configure(FeatureContext context) {
-        System.out.println("configure");
         org.glassfish.hk2.utilities.ServiceLocatorUtilities.bind(locator, new MemoryBinder());
         return true;
     }
