@@ -23,7 +23,6 @@
  */
 package com.github.skapral.wemake.app;
 
-import com.github.skapral.config.CpStatic;
 import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
 import com.github.skapral.wemake.web.jersey.API;
 import com.pragmaticobjects.oo.atom.anno.NotAtom;

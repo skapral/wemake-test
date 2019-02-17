@@ -33,6 +33,9 @@ import com.github.skapral.config.CpStatic;
  * @author skapral
  */
 public class Cp_PORT extends CpOneOf {
+    /**
+     * Ctor.
+     */
     public Cp_PORT() {
         super(
             new CpEnvironment("PORT"),
