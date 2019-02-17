@@ -23,31 +23,20 @@
  */
 package com.github.skapral.wemake.app;
 
+import com.github.skapral.config.CpEnvironment;
+import com.github.skapral.config.CpOneOf;
 import com.github.skapral.config.CpStatic;
-import com.github.skapral.jersey.se.SrvGrizzlyWithJersey;
-import com.github.skapral.wemake.web.jersey.API;
-import com.pragmaticobjects.oo.atom.anno.NotAtom;
 
 /**
- * Application bootstrap class.
+ * PORT env variable
  * 
  * @author skapral
  */
-@NotAtom
-public class Bootstrap {
-    /**
-     * Entry point
-     * 
-     * @param args 
-     * @throws Exception if something goes wrong
-     */
-    public static void main(String... args) throws Exception {
-        new SrvGrizzlyWithJersey(
-            new Cp_PORT(),
-            new API()
-        ).start();
-        while(true) {
-            System.in.read();
-        }
+public class Cp_PORT extends CpOneOf {
+    public Cp_PORT() {
+        super(
+            new CpEnvironment("PORT"),
+            new CpStatic("8080")
+        );
     }
 }
